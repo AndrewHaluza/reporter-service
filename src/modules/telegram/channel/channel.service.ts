@@ -31,6 +31,10 @@ export class ChannelService {
     return this.channelRepository.updateOne(query, createChannelDto);
   }
 
+  async findOne(...args) {
+    return this.channelRepository.findOne(...args);
+  }
+
   private async createOrUpdate(
     createChannelDto: CreateChannelDto,
   ): Promise<ChannelCronStatusEnum> {

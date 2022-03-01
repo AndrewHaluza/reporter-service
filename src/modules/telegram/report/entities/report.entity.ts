@@ -8,7 +8,7 @@ const ReportSchema = new Schema(
     userId: { type: Types.ObjectId, required: true },
     channelId: { type: Types.ObjectId, required: true },
     lastUsage: { type: Date, required: true },
-    usageCount: { type: Number, required: true },
+    usageCount: { type: Number, default: 1 },
   },
   {
     versionKey: false,
