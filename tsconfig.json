@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@filters/*": ["./src/filters/*"],
+      "@guards/*": ["./src/guards/*"],
+      "@interfaces/*": ["./src/interfaces/*"],
+      "@shared/*": ["./src/components/shared/*"],
+      "@components/*": ["./src/components/*"],
+      "@constants/*": ["./src/constants/*"],
+      "@pipes/*": ["./src/pipes/*"],
+      "@dto/*": ["./src/dto/*"],
+      "@schemas/*": ["./src/schemas/*"],
+      "@decorators/*": ["./src/decorators/*"],
+      "@configs/*": ["./src/configs/*"],
+      "@enums/*": ["./src/enums/*"],
+      "@views/*": ["./src/views/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@src/*": ["./src/*"]
+    }
+  }
+}
