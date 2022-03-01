@@ -1,9 +1,9 @@
-{
-    "apps": [
-      {
-        "name": "reporter-service",
-        "script": "./index.js",
-        "exec_mode": "cluster"
-       }
-    ]
-  }
+module.exports = {
+  apps: [
+    {
+      name: 'reporter-service',
+      script: './index.js',
+      exec_mode: 'cluster',
+    },
+  ],
+};
