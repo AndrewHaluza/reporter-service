@@ -2,8 +2,8 @@ module.exports = {
   apps: [
     {
       name: 'reporter-service',
-      script: './index.js',
-      exec_mode: 'cluster',
+      script: 'npm',
+      args: 'run start:prod',
     },
   ],
 };
