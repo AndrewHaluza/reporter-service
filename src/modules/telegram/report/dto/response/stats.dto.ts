@@ -4,6 +4,9 @@ export class ResponseReportStatsDto {
   @ApiProperty()
   general: number;
 
-  @ApiProperty()
-  personal: number;
+  @ApiProperty({
+    description: 'would be returned in case authorized request',
+    required: false,
+  })
+  personal?: number;
 }
