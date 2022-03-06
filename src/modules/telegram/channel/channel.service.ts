@@ -10,6 +10,8 @@ import { CreateChannelDto } from './dto/create-channel.dto';
 import { UpdateChannelDto } from './dto/update-channel.dto';
 import { ChannelCronStatusEnum } from '@src/modules/telegram/channel/enum/cronStatus.enum';
 import { ChannelStatusEnum } from '@src/modules/telegram/channel/enum/status.enum';
+import { TcChannelEntity } from '@src/entities/tcChannel.entity';
+import { asyncEach } from '@src/utils';
 
 @Injectable()
 export class ChannelService {
@@ -17,7 +19,8 @@ export class ChannelService {
     @InjectModel(CollectionsConstants.channels)
     private readonly channelRepository: Model<IChannel>,
     private httpService: HttpService,
-  ) {}
+  ) {
+  }
 
   readonly logger: Logger = new Logger('channel.service');
 
@@ -142,6 +145,23 @@ export class ChannelService {
     this.logger.verbose(
       `cronUpdateList launched; new: ${counts.new}, updated: ${counts.updated}, skipped: ${counts.skipped} | total: ${counts.total}`,
     );
+  }
+
+  async cronUpdateListFromTcChannels(): Promise<void> {
+    this.httpService.get(process.env.TC_CHANNELS_URL).subscribe(async (res) => {
+      try {
+        const tcChannels: TcChannelEntity[] = JSON.parse(`[${res.data.trim().split('\r\n').join(',')}]`);
+
+        const results = await asyncEach(
+          tcChannels,
+          (tcChannel: TcChannelEntity) => this.createOrUpdate({ name: tcChannel.channel, priority: 0 }),
+        );
+
+        this.logCronUpdateResults(results);
+      } catch (err) {
+        this.logger.error(err.name, err.stack);
+      }
+    });
   }
 
   async cronUpdateList() {

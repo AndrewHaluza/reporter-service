@@ -27,4 +27,10 @@ export class CronService {
   async updateChannelsList() {
     return this.channelService.cronUpdateList();
   }
+
+  @Cron(CronExpression.EVERY_2_HOURS)
+  @LogErrorDecorator()
+  async updateFromTcChannels(): Promise<void> {
+    return this.channelService.cronUpdateListFromTcChannels()
+  }
 }
