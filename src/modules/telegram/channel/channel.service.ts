@@ -99,7 +99,7 @@ export class ChannelService {
       },
       {
         $addFields: {
-          channel: { $arrayElemAt: ['$channel', 0] },
+          report: { $arrayElemAt: ['$report', 0] },
         },
       },
       {
