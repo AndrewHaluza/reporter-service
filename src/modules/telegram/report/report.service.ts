@@ -55,4 +55,27 @@ export class ReportService {
 
     return { status: 'ok' };
   }
+
+  async getStats(userId: string) {
+    const [result] = await this.reportRepository.aggregate([
+      {
+        $facet: {
+          general: [{ $count: 'count' }],
+          personal: [
+            { $match: { userId: new Types.ObjectId(userId) } },
+            { $count: 'count' },
+          ],
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          general: { $arrayElemAt: ['$general.count', 0] },
+          personal: { $arrayElemAt: ['$personal.count', 0] },
+        },
+      },
+    ]);
+
+    return result;
+  }
 }
