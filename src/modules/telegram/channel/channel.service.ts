@@ -19,8 +19,7 @@ export class ChannelService {
     @InjectModel(CollectionsConstants.channels)
     private readonly channelRepository: Model<IChannel>,
     private httpService: HttpService,
-  ) {
-  }
+  ) {}
 
   readonly logger: Logger = new Logger('channel.service');
 
@@ -150,11 +149,14 @@ export class ChannelService {
   async cronUpdateListFromTcChannels(): Promise<void> {
     this.httpService.get(process.env.TC_CHANNELS_URL).subscribe(async (res) => {
       try {
-        const tcChannels: TcChannelEntity[] = JSON.parse(`[${res.data.trim().split('\r\n').join(',')}]`);
+        const tcChannels: TcChannelEntity[] = JSON.parse(
+          `[${res.data.trim().split('\r\n').join(',')}]`,
+        );
 
         const results = await asyncEach(
           tcChannels,
-          (tcChannel: TcChannelEntity) => this.createOrUpdate({ name: tcChannel.channel, priority: 0 }),
+          (tcChannel: TcChannelEntity) =>
+            this.createOrUpdate({ name: tcChannel.channel, priority: 0 }),
         );
 
         this.logCronUpdateResults(results);
