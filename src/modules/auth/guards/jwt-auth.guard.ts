@@ -22,16 +22,17 @@ export default class JwtAuthGuard extends AuthGuard('jwt') {
       throw err;
     }
 
+    if (isPublic) {
+      return user || null;
+    }
+
     if (info) {
       if (info.name === 'TokenExpiredError') {
         // eslint-disable-next-line no-param-reassign
         info.status = 401;
       }
 
-      if (isPublic && info.message !== 'No auth token') {
-        info.status = 401;
-        throw new UnauthorizedException(info);
-      }
+      throw new UnauthorizedException(info);
     }
 
     return user;
