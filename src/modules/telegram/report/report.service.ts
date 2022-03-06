@@ -56,7 +56,8 @@ export class ReportService {
     return { status: 'ok' };
   }
 
-  async getStats(userId: string) {
+  async getStats(userId?: string) {
+    /** public route - could be without userId */
     const [result] = await this.reportRepository.aggregate([
       {
         $facet: {

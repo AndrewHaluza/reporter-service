@@ -12,20 +12,12 @@ export default class JwtAuthGuard extends AuthGuard('jwt') {
     super();
   }
 
-  canActivate(context: ExecutionContext) {
+  handleRequest(err, user, info, context) {
     const isPublic = this.reflector.get<boolean>(
       'isPublic',
       context.getHandler(),
     );
 
-    if (isPublic) {
-      return true;
-    }
-
-    return super.canActivate(context);
-  }
-
-  handleRequest(err, user, info) {
     if (err) {
       throw err;
     }
@@ -36,7 +28,10 @@ export default class JwtAuthGuard extends AuthGuard('jwt') {
         info.status = 401;
       }
 
-      throw new UnauthorizedException(info);
+      if (isPublic && info.message !== 'No auth token') {
+        info.status = 401;
+        throw new UnauthorizedException(info);
+      }
     }
 
     return user;
