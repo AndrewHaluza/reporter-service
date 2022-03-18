@@ -58,25 +58,35 @@ export class ReportService {
 
   async getStats(userId?: string) {
     /** public route - could be without userId */
-    const [result] = await this.reportRepository.aggregate([
-      {
-        $facet: {
-          general: [{ $count: 'count' }],
-          personal: [
-            { $match: { userId: new Types.ObjectId(userId) } },
-            { $count: 'count' },
-          ],
+    const [[reportResults], [channels]] = await Promise.all([
+      this.reportRepository.aggregate([
+        {
+          $facet: {
+            general: [
+              { $group: { _id: null, count: { $sum: '$usageCount' } } },
+            ],
+            personal: [
+              { $match: { userId: new Types.ObjectId(userId) } },
+              {
+                $group: {
+                  _id: null,
+                  count: { $sum: '$usageCount' },
+                },
+              },
+            ],
+          },
         },
-      },
-      {
-        $project: {
-          _id: 0,
-          general: { $arrayElemAt: ['$general.count', 0] },
-          personal: { $arrayElemAt: ['$personal.count', 0] },
+        {
+          $project: {
+            _id: 0,
+            general: { $arrayElemAt: ['$general.count', 0] },
+            personal: { $arrayElemAt: ['$personal.count', 0] },
+          },
         },
-      },
+      ]),
+      this.channelService.getStats(),
     ]);
 
-    return result;
+    return { ...reportResults, channels };
   }
 }

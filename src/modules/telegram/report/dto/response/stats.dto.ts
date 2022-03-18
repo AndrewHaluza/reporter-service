@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ResponseReportStatsChannelsDto } from '@src/modules/telegram/report/dto/response/statsChannels.dto';
 
 export class ResponseReportStatsDto {
   @ApiProperty()
@@ -9,4 +10,7 @@ export class ResponseReportStatsDto {
     required: false,
   })
   personal?: number;
+
+  @ApiProperty({ type: ResponseReportStatsChannelsDto })
+  channels: ResponseReportStatsChannelsDto;
 }

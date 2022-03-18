@@ -122,6 +122,35 @@ export class ChannelService {
     return results;
   }
 
+  async getStats() {
+    return this.channelRepository.aggregate([
+      {
+        $facet: {
+          published: [
+            { $match: { status: ChannelStatusEnum.published } },
+            { $count: 'count' },
+          ],
+          disabled: [
+            { $match: { status: ChannelStatusEnum.disabled } },
+            { $count: 'count' },
+          ],
+        },
+      },
+      {
+        $project: {
+          published: { $arrayElemAt: ['$published', 0] },
+          disabled: { $arrayElemAt: ['$disabled', 0] },
+        },
+      },
+      {
+        $project: {
+          published: '$published.count',
+          disabled: '$disabled.count',
+        },
+      },
+    ]);
+  }
+
   private logCronUpdateResults(results: ChannelCronStatusEnum[]) {
     const counts = { new: 0, updated: 0, skipped: 0, total: 0 };
 
